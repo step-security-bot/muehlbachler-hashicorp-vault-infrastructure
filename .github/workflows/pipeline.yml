@@ -1,0 +1,118 @@
+---
+name: Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+
+env:
+  NODE_OPTIONS: "--max-old-space-size=4096"
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    name: Pulumi Preview
+    strategy:
+      max-parallel: 12
+      matrix:
+        node-version: ["18"]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: |
+          npm install -g yarn
+
+      - run: |
+          yarn install
+          yarn build
+
+      - uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:github-actions
+      
+      - uses: pulumi/actions@v5
+        with:
+          command: preview
+          stack-name: prod
+          refresh: true
+        env:
+          CLOUDSDK_COMPUTE_REGION: "${{ secrets.CLOUDSDK_COMPUTE_REGION }}"
+          GOOGLE_CREDENTIALS: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}"
+          GITHUB_TOKEN: "${{ secrets.GH_PAT_TOKEN }}"
+          PULUMI_ACCESS_TOKEN: "${{ secrets.PULUMI_ACCESS_TOKEN }}"
+          PROXMOX_VE_USERNAME: "${{ secrets.PROXMOX_VE_USERNAME }}"
+          PROXMOX_VE_PASSWORD: "${{ secrets.PROXMOX_VE_PASSWORD }}"
+          PROXMOX_VE_ENDPOINT: "${{ secrets.PROXMOX_VE_ENDPOINT }}"
+          PROXMOX_VE_INSECURE: "${{ secrets.PROXMOX_VE_INSECURE }}"
+
+  deploy:
+    runs-on: ubuntu-latest
+    name: Pulumi Deploy
+    needs:
+      - preview
+    strategy:
+      max-parallel: 12
+      matrix:
+        node-version: ["18"]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: jaxxstorm/action-install-gh-release@v1.11.0
+        with:
+          repo: k0sproject/k0sctl
+          extension-matching: disable
+          rename-to: k0sctl
+          chmod: 0755
+
+      - uses: yokawasa/action-setup-kube-tools@v0.11.1
+        with:
+          setup-tools: helm
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: |
+          npm install -g yarn
+
+      - run: |
+          yarn install
+          yarn build
+
+      - uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:github-actions
+      
+      - uses: pulumi/actions@v5
+        with:
+          command: up
+          stack-name: prod
+        env:
+          CLOUDSDK_COMPUTE_REGION: "${{ secrets.CLOUDSDK_COMPUTE_REGION }}"
+          GOOGLE_CREDENTIALS: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}"
+          GITHUB_TOKEN: "${{ secrets.GH_PAT_TOKEN }}"
+          PULUMI_ACCESS_TOKEN: "${{ secrets.PULUMI_ACCESS_TOKEN }}"
+          PROXMOX_VE_USERNAME: "${{ secrets.PROXMOX_VE_USERNAME }}"
+          PROXMOX_VE_PASSWORD: "${{ secrets.PROXMOX_VE_PASSWORD }}"
+          PROXMOX_VE_ENDPOINT: "${{ secrets.PROXMOX_VE_ENDPOINT }}"
+          PROXMOX_VE_INSECURE: "${{ secrets.PROXMOX_VE_INSECURE }}"

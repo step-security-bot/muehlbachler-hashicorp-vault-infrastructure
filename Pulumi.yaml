@@ -1,0 +1,6 @@
+name: muehlbachler-hashicorp-vault-infrastructure
+description: "muehlbachler: Hashicorp Vault - Infrastructure"
+runtime:
+  name: nodejs
+  options:
+    typescript: false
