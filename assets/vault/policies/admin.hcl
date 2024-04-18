@@ -19,6 +19,12 @@ path "sys/auth" {
 path "secret/*" {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
+path "github-*/*" {
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+path "kubernetes-*/*" {
+  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
 path "sys/mounts/*" {
   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
