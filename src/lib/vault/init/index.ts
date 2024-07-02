@@ -28,9 +28,6 @@ export const initVault = (
         privateKey: sshPrivateKey,
       },
       create: initScript,
-      environment: {
-        SSH_KNOWN_HOSTS: '/dev/null',
-      },
     },
     {
       customTimeouts: {
