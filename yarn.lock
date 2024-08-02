@@ -505,9 +505,9 @@
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
 "@pulumi/command@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@pulumi/command/-/command-1.0.0.tgz#e53d08a8ddb16c809b8afdb80ad1027a8f981cc3"
-  integrity sha512-QqtiWlIZcl6YOjufJZkY0huxJnUggF7wuHnJZB/FX72Myc3w3LZY6Rk6osiu2Zy5Bbmtbeuz4Q7QphdrV4ulGQ==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@pulumi/command/-/command-1.0.1.tgz#770c266e59b2cb8450128890dbdcbbd60e2877a0"
+  integrity sha512-PqqcMp80Y9dc7Lt0epXqvqha76S4XF08NB8lpMA0zJ9zWvkkssQ8lq8XdHuZOrAGHXj7gKBs6JBrhhltoovUTQ==
   dependencies:
     "@pulumi/pulumi" "^3.0.0"
 
