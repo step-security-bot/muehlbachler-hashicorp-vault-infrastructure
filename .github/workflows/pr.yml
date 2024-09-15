@@ -117,6 +117,12 @@ jobs:
           yarn install
           yarn build
 
+      - uses: pulumi/auth-actions@v1
+        with:
+          organization: muhlba91
+          requested-token-type: urn:pulumi:token-type:access_token:personal
+          scope: user:muhlba91
+
       - uses: tailscale/github-action@v2
         with:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
@@ -133,7 +139,6 @@ jobs:
           CLOUDSDK_COMPUTE_REGION: "${{ secrets.CLOUDSDK_COMPUTE_REGION }}"
           GOOGLE_CREDENTIALS: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}"
           GITHUB_TOKEN: "${{ secrets.GH_PAT_TOKEN }}"
-          PULUMI_ACCESS_TOKEN: "${{ secrets.PULUMI_ACCESS_TOKEN }}"
           PROXMOX_VE_USERNAME: "${{ secrets.PROXMOX_VE_USERNAME }}"
           PROXMOX_VE_PASSWORD: "${{ secrets.PROXMOX_VE_PASSWORD }}"
           PROXMOX_VE_ENDPOINT: "${{ secrets.PROXMOX_VE_ENDPOINT }}"
