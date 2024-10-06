@@ -130,6 +130,11 @@ export const createServer = (
       operatingSystem: {
         type: 'l26',
       },
+      watchdog: {
+        action: 'none',
+        enabled: false,
+        model: 'i6300esb',
+      },
       initialization: {
         type: 'nocloud',
         datastoreId: pveConfig.storagePool,
